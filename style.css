@@ -101,18 +101,18 @@ input[type="text"]:focus {
 table {
     border-collapse: collapse;
     margin: 0 auto;
-    width: 90%;
-    max-width: 800px;
+    width: 100%;
+    max-width: 1000px;
     table-layout: fixed;
 }
 
 td {
     text-align: center;
-    width: 10%;
+    width: 20%;
     aspect-ratio: 1 / 1;
     border: 2px solid #0e3fe0;
     background-color: #e0ffe0;
-    font-size: clamp(12px, 2vw, 24px);
+    font-size: clamp(14px, 3vw, 50px);
     font-weight: bold;
     color: #0f34da;
     transition: all 0.4s ease;
@@ -201,5 +201,3 @@ td.clignote { animation: clignoter 15s infinite; }
         font-size: 28px;
     }
 }
-
-
