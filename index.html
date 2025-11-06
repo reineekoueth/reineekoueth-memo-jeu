@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Memo table Swan & PAUL</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body><body>
+
+<!-- BARRE FIXE EN HAUT -->
+<div class="header">
+  <h1>Memo table Swan & PAUL</h1>
+  <div id="compteur">Score : 0</div>
+</div>
+
+<!-- CONTENU PRINCIPAL -->
+<div class="centre">
+  <p><button onclick="remplirTableau()">Jouer</button></p>
+
+  <p>
+    <label>Valeurs effacées est  :</label>
+    <input id="nombre" type="text" placeholder="séparées par ."/>
+    <button onclick="valider()">Valider</button>
+  </p>
+
+  <p id="message">...</p>
+
+  <table id="leTableau"></table>
+</div>
+
+<!-- OVERLAY -->
+<div id="bravoOverlay">GOOD JOB</div>
+
+<!-- SONS -->
+<audio id="sonCorrect" src="song/mixkit-males-yes-victory-2012.wav"></audio>
+<audio id="sonWrong" src="song/no-no-no-242246.mp3"></audio>
+<audio id="sonBravo" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3"></audio>
+
+</body>
+<script>
+let valeursCliquees = [];
+let compteur = 0;
+let nbCellules = 1;
+let succesConsecutifs = 0;
+
+function remplirTableau() {
+    const tableau = document.getElementById('leTableau');
+    let contenu = "";
+    let numeros = [];
+
+    for (let i = 0; i <= 100; i++) numeros.push(i);
+    numeros = numeros.sort(() => Math.random() - 0.5);
+
+    let index = 0;
+    for (let i = 0; i < 10; i++) {
+        contenu += "<tr>";
+        for (let j = 0; j < 10; j++) {
+            if (index < numeros.length) {
+                contenu += `<td>${numeros[index]}</td>`;
+                index++;
+            } else {
+                contenu += `<td></td>`;
+            }
+        }
+        contenu += "</tr>";
+    }
+
+    tableau.innerHTML = contenu;
+    document.getElementById('nombre').value = '';
+    valeursCliquees = [];
+
+    effacerPlusieursCellules(nbCellules);
+}
+
+function effacerPlusieursCellules(n) {
+    const tableau = document.getElementById('leTableau');
+    const toutesCellules = tableau.querySelectorAll('td');
+    const cellulesValides = Array.from(toutesCellules).filter(td => td.textContent !== '' && !td.classList.contains('hidden'));
+
+    valeursCliquees = [];
+    let cellulesChoisies = [];
+
+    for (let i = 0; i < n && cellulesValides.length > 0; i++) {
+        const indexAleatoire = Math.floor(Math.random() * cellulesValides.length);
+        const cellule = cellulesValides.splice(indexAleatoire, 1)[0];
+        valeursCliquees.push(parseInt(cellule.textContent, 10));
+        cellulesChoisies.push(cellule);
+
+        cellule.classList.add('clignote');
+    }
+
+    setTimeout(() => {
+        cellulesChoisies.forEach(td => {
+            td.classList.remove('clignote');
+            td.classList.add('hidden');
+        });
+    }, 7000);
+}
+
+function valider() {
+    const reponse = document.getElementById('nombre').value
+                        .split(',')
+                        .map(s => parseInt(s.trim(), 10));
+
+    const sonCorrect = document.getElementById('sonCorrect');
+    const sonWrong = document.getElementById('sonWrong');
+    const sonBravo = document.getElementById('sonBravo');
+
+    const tableau = document.getElementById('leTableau');
+    const toutesCellules = tableau.querySelectorAll('td');
+
+    let correct = valeursCliquees.length === reponse.length &&
+                  valeursCliquees.slice().sort((a,b)=>a-b).join(',') === reponse.slice().sort((a,b)=>a-b).join(',');
+
+    if (correct) {
+        compteur++;
+        succesConsecutifs++;
+        document.getElementById('message').textContent = "Bravo, continuez !";
+        document.getElementById('message').style.color = "#008000";
+        sonCorrect.play();
+        document.getElementById('compteur').textContent = compteur;
+
+        toutesCellules.forEach(td => {
+            if (valeursCliquees.includes(parseInt(td.textContent,10))) {
+                td.classList.add('correct');
+            }
+        });
+
+        setTimeout(() => {
+            toutesCellules.forEach(td => td.classList.remove('correct'));
+
+            if (succesConsecutifs >= 6) {
+                // Afficher BRAVO overlay
+                const overlay = document.getElementById('bravoOverlay');
+                overlay.style.display = 'block';
+                sonBravo.play();
+
+                compteur = 0;
+                nbCellules = 1;
+                succesConsecutifs = 0;
+                document.getElementById('compteur').textContent = compteur;
+
+                setTimeout(() => {
+                    overlay.style.display = 'none';
+                    document.getElementById('message').textContent = "...";
+                    document.getElementById('message').style.fontSize = "22px";
+                    remplirTableau();
+                }, 3000);
+            } else {
+                if (nbCellules < 6 ) nbCellules++;
+                effacerPlusieursCellules(nbCellules);
+            }
+        }, 2000);
+
+    } else {
+        compteur = 0;
+        nbCellules = 1;
+        succesConsecutifs = 0;
+        document.getElementById('message').textContent = "Erreur ! Voici les bonnes valeurs :";
+        document.getElementById('message').style.color = "red";
+        document.getElementById('compteur').textContent = compteur;
+        sonWrong.play();
+
+        toutesCellules.forEach(td => {
+            const val = parseInt(td.textContent,10);
+            if (valeursCliquees.includes(val)) {
+                td.classList.remove('hidden');
+                td.classList.add('show-correct');
+            }
+        });
+
+        setTimeout(() => {
+            toutesCellules.forEach(td => td.classList.remove('show-correct'));
+            remplirTableau();
+        }, 3000);
+    }
+
+    document.getElementById('nombre').value = '';
+}
+</script>
+</html>
+

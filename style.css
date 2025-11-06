@@ -1,0 +1,173 @@
+/* === STYLE GLOBAL === */
+body {
+    font-family: 'Times New Roman', Times, serif;
+    background:linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+        url("kekeetsousou.jpg") center center / cover no-repeat fixed;
+    margin: 0;
+    padding: 0;
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.header {
+    position: fixed;               /* reste en haut même si on scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;                 /* disposition flexible */
+    justify-content: flex-start;   /* alignement à gauche */
+    align-items: flex-start;
+    padding: 15px 50px;
+    z-index: 1000;
+    flex-direction: column;        /* empile le nom et le score verticalement */
+}
+
+/* titre (memo) */
+.header h1 {
+    font-size: 50px;
+    margin: 0;
+    color: #fff;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+/* compteur / score */
+.header #compteur {
+    font-size: 28px;
+    color: #ffcc00;
+    font-weight: bold;
+    text-shadow: 1px 1px 4px #000;
+    margin-top: 8px;
+}
+
+/* === CONTENEUR PRINCIPAL (SOUS LE HEADER) === */
+.centre {
+    width: 95%;
+    max-width: 1400px;
+    margin: 140px auto 40px; /* décalé pour ne pas être caché sous le header */
+    text-align: center;
+}
+label {
+    font-size: 28px;                      /* taille plus grande */
+    font-family: 'Georgia', serif;        /* police élégante */
+    font-weight: bold;
+    color: #ffda06;                       /* doré */
+    text-shadow: 1px 1px 4px #000;        /* lisible sur fond sombre */
+    margin-right: 10px;
+    font-family: 'Times New Roman', Times, serif;
+}
+/* === BOUTONS === */
+button {
+    background-color: #0d7bf8;
+    border: none;
+    padding: 12px 25px;
+    font-size: 30px;
+    cursor: pointer;
+    border-radius: 12px;
+    margin: 10px;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    color: #fff;
+}
+button:hover {
+    background-color: #32f389;
+    transform: scale(1.08);
+}
+
+/* === CHAMP DE TEXTE === */
+input[type="text"] {
+    font-size: 40px;
+    width: 350px;
+    padding: 10px 15px;
+    text-align: center;
+    border: 3px solid transparent;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    outline: none;
+    transition: all 0.3s ease;
+    font-family:Georgia, 'Times New Roman', Times, serif;
+}
+input[type="text"]:focus {
+    border-color: #ffe066;
+    box-shadow: 0 0 12px rgba(255, 230, 100, 0.8);
+}
+
+/* === TABLEAU === */
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1000px;
+}
+td {
+    text-align: center;
+    width: 80px;
+    height: 80px;
+    border: 2px solid #0e3fe0;
+    background-color: #e0ffe0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0f34da;
+    transition: all 0.4s ease;
+    border-radius: 10px;
+}
+
+/* === ETATS DES CELLULES === */
+td.hidden { visibility: hidden; transform: scale(0); }
+td.correct { background-color: #8cff8c !important; color: #006400; }
+td.wrong { background-color: #ff6b6b !important; color: #800000; }
+td.show-correct { background-color: #65d6ff !important; color: #003366; }
+@keyframes clignoter {
+    0%, 50%, 100% { background-color: #fffa65; }
+    25%, 75% { background-color: #e0ffe0; }
+}
+td.clignote { animation: clignoter 15s infinite; }
+
+/* === MESSAGE === */
+#message {
+    font-weight: bold;
+    font-size: 28px;
+    color: #32f389;
+}
+
+/* === OVERLAY "BRAVO" === */
+#bravoOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 0, 0.8);
+    color: red;
+    font-size: 80px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 100vh;
+    z-index: 9999;
+    animation: clignoterBravo 2s infinite;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+@keyframes clignoterBravo {
+    0%, 50%, 100% { color: red; }
+    25%, 75% { color: white; }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+    .header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+    .centre {
+        margin-top: 180px;
+        width: 95%;
+    }
+    td {
+        width: 55px;
+        height: 55px;
+        font-size: 18px;
+    }
+}
