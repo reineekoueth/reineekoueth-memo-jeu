@@ -94,7 +94,7 @@ function effacerPlusieursCellules(n) {
             td.classList.remove('clignote');
             td.classList.add('hidden');
         });
-    }, 7000);
+    }, 5000);
 }
 
 function valider() {
@@ -177,8 +177,18 @@ function valider() {
 
     document.getElementById('nombre').value = '';
 }
+    // Ajouter ceci à la fin de ton script
+const inputNombre = document.getElementById('nombre');
+
+inputNombre.addEventListener('keydown', function(event) {
+    if (event.key === "Enter") {  // touche Entrée
+        valider();                // appelle ta fonction de validation
+    }
+});
+
 </script>
 </html>
+
 
 
 
